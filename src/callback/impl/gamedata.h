@@ -4,13 +4,7 @@
 
 class GameData : public Callback {
 public:
-    GameData() {
-        name = "Game";
-        tooltip = "Drop incoming game data";
-        port_start = 3074;
-        port_end = 3074;
-        direction = DIRECTION::INGRESS;
-    }
+    GameData() : Callback("Game", "Drop incoming game data", 3074, 3074, DIRECTION::INGRESS) {}
 
     bool call(HANDLE hdl, Packet& pkt) override {
         return true;

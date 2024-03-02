@@ -9,13 +9,7 @@ public:
         WINDIVERT_TCPHDR tcp;
     } reset;
 
-    Reconnect() {
-        name = "Reconnect";
-        tooltip = "Reconnect to the instance";
-        port_start = 30000;
-        port_end = 30009;
-        direction = DIRECTION::INGRESS;
-
+    Reconnect() : Callback("Reconnect", "Reconnect to the instance", 30000, 30009, DIRECTION::INGRESS) {
         ZeroMemory(&reset, sizeof(reset));
 
         reset.ip.Version = 4;

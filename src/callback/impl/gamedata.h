@@ -11,7 +11,6 @@ public:
     }
 
     bool call(HANDLE hdl, Packet& pkt) override {
-        // just drop for now
         return true;
     }
 };

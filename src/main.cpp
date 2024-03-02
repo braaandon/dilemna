@@ -1,12 +1,23 @@
-#include "packet_manager.h"
+#include <thread>
 
+#include "menu.h"
+#include "packet_manager.h"
 #include "callback/impl/gamedata.h"
 #include "callback/impl/reconnect.h"
 
+
 int main() {
-    PacketManager manager{};
-    manager.add_callback<GameData>();
-    manager.add_callback<Reconnect>();
-    manager.listen();
-    return 0;
+    Menu menu;
+    State state;
+    PacketManager manager;
+
+    state.add_callback<GameData>();
+    state.add_callback<Reconnect>();
+
+    std::jthread renderer(&Menu::render, menu, std::ref(state));
+    std::jthread listener(&PacketManager::listen, manager, std::ref(state));
+    renderer.join();
+    listener.join();
+    return EXIT_SUCCESS;
 }
+

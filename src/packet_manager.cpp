@@ -5,7 +5,12 @@ bool PacketManager::initialise() {
     return handle != INVALID_HANDLE_VALUE;
 }
 
-void PacketManager::listen() {
+void PacketManager::shutdown() {
+    WinDivertShutdown(handle, WINDIVERT_SHUTDOWN_BOTH);
+    WinDivertClose(handle);
+}
+
+void PacketManager::listen(State& state) {
     if (!initialise()) {
         std::cout << "init failed\n";
         return;
@@ -13,7 +18,9 @@ void PacketManager::listen() {
 
     Packet pkt;
 
-    while(WinDivertRecv(handle, pkt.buffer, sizeof(pkt.buffer), &pkt.buffer_len, &pkt.addr)) {
+    while(!state.stopper.stop_requested()) {
+        WinDivertRecv(handle, pkt.buffer, sizeof(pkt.buffer), &pkt.buffer_len, &pkt.addr);
+
         WinDivertHelperParsePacket(pkt.buffer,
                                    pkt.buffer_len,
                                    &pkt.ip_header,
@@ -36,25 +43,13 @@ void PacketManager::listen() {
         bool cancelled = false;
         std::optional<std::shared_ptr<Callback>> cb{};
 
-        if (pkt.tcp_header != nullptr) cb = find_callback(htons(pkt.tcp_header->SrcPort), htons(pkt.tcp_header->DstPort));
-        if (pkt.udp_header != nullptr) cb = find_callback(htons(pkt.udp_header->SrcPort), htons(pkt.udp_header->DstPort));
+        if (pkt.tcp_header != nullptr) cb = state.find_callback(htons(pkt.tcp_header->SrcPort), htons(pkt.tcp_header->DstPort));
+        if (pkt.udp_header != nullptr) cb = state.find_callback(htons(pkt.udp_header->SrcPort), htons(pkt.udp_header->DstPort));
+
         if (cb.has_value()) cancelled = (*cb)->call(handle, pkt);
         if (!cancelled) WinDivertSend(handle, pkt.buffer, sizeof(pkt.buffer), nullptr, &pkt.addr);
     }
+
+    shutdown();
 }
 
-std::optional<std::shared_ptr<Callback>> PacketManager::find_callback(int src, int dst) {
-    for (auto& callback : callbacks) {
-        if (callback->enabled) {
-            if (callback->direction == DIRECTION::INGRESS && callback->port_start <= src && callback->port_end >= src) {
-                return callback;
-            }
-
-            if (callback->direction == DIRECTION::EGRESS && callback->port_start <= dst && callback->port_end >= dst) {
-                return callback;
-            }
-        }
-    }
-
-    return std::nullopt;
-}

@@ -12,7 +12,6 @@ public:
     Reconnect() {
         port_start = 30000;
         port_end = 30009;
-        enabled = true;
         direction = DIRECTION::INGRESS;
 
         ZeroMemory(&reset, sizeof(reset));

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../packet.h"
+#include "../packet/packet.h"
 
 class Callback {
 public:

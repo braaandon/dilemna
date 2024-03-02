@@ -7,8 +7,7 @@
 #include <windivert.h>
 
 #include "packet.h"
-#include "callback/callback.h"
-#include "state.h"
+#include "../state.h"
 
 class PacketManager {
 public:

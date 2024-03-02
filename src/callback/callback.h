@@ -1,12 +1,16 @@
 #pragma once
 
+#include <string>
+
 #include "../packet.h"
 
 class Callback {
 public:
-    int port_start{};
-    int port_end{};
-    DIRECTION direction{};
+    std::string name;
+    std::string tooltip;
+    int port_start;
+    int port_end;
+    DIRECTION direction;
 
     bool enabled = false;
 

@@ -10,6 +10,8 @@ public:
     } reset;
 
     Reconnect() {
+        name = "Reconnect";
+        tooltip = "Reconnect to the instance";
         port_start = 30000;
         port_end = 30009;
         direction = DIRECTION::INGRESS;

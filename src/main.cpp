@@ -2,6 +2,7 @@
 
 #include "menu.h"
 #include "packet_manager.h"
+#include "callback/impl/players.h"
 #include "callback/impl/gamedata.h"
 #include "callback/impl/reconnect.h"
 
@@ -12,6 +13,7 @@ int main() {
     PacketManager manager;
 
     state.add_callback<GameData>();
+    state.add_callback<Players>();
     state.add_callback<Reconnect>();
 
     std::jthread renderer(&Menu::render, menu, std::ref(state));

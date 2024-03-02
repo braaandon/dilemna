@@ -37,7 +37,15 @@ void Menu::render(State& state) {
         ImGui::Begin("limits", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 
         for (auto& cb : state.callbacks) {
-            ImGui::Checkbox(std::to_string(cb->port_start).c_str(), &cb->enabled);
+            ImGui::Checkbox(cb->name.c_str(), &cb->enabled);
+            ImGui::SameLine();
+            ImGui::TextDisabled("[?]");
+            if (ImGui::BeginItemTooltip()) {
+                ImGui::PushTextWrapPos(ImGui::GetFontSize() * 20.0f);
+                ImGui::TextUnformatted(cb->tooltip.c_str());
+                ImGui::PopTextWrapPos();
+                ImGui::EndTooltip();
+            }
         }
 
         ImGui::End();

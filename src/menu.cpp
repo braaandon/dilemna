@@ -1,8 +1,5 @@
 #include "menu.h"
 
-int Menu::resize_width = 0;
-int Menu::resize_height = 0;
-
 void Menu::render(State& state) {
     create_ctx();
 
@@ -19,13 +16,6 @@ void Menu::render(State& state) {
 
             if (msg.message == WM_QUIT)
                 state.stopper.request_stop();
-        }
-
-        if (resize_width != 0 && resize_height != 0) {
-            cleanup_rendertarget();
-            swapchain->ResizeBuffers(0, resize_width, resize_height, DXGI_FORMAT_UNKNOWN, 0);
-            resize_width = resize_height = 0;
-            create_rendertarget();
         }
 
         ImGui_ImplDX11_NewFrame();
@@ -69,6 +59,7 @@ void Menu::render(State& state) {
 void Menu::create_ctx() {
     create_window();
     create_device();
+    create_rendertarget();
 
     ShowWindow(hwnd, SW_SHOWDEFAULT);
     UpdateWindow(hwnd);
@@ -99,7 +90,7 @@ void Menu::create_window() {
     wndclass.lpszClassName = "dilemna";
     RegisterClass(&wndclass);
 
-    hwnd = CreateWindow("dilemna", "dilemna", WS_OVERLAPPEDWINDOW, 100, 100, 300, 200, nullptr, nullptr, nullptr, nullptr);
+    hwnd = CreateWindow("dilemna", "dilemna", WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, 100, 100, 300, 200, nullptr, nullptr, nullptr, nullptr);
 }
 
 void Menu::cleanup_window() {
@@ -161,15 +152,8 @@ LRESULT WINAPI Menu::wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
     if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
         return true;
 
-    switch (msg) {
-        case WM_SIZE:
-            resize_width = LOWORD(lparam);
-            resize_height = HIWORD(lparam);
-            break;
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
-    }
+    if (msg == WM_DESTROY)
+        PostQuitMessage(0);
 
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }

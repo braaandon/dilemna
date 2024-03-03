@@ -21,9 +21,6 @@ private:
     IDXGISwapChain* swapchain = nullptr;
     ID3D11RenderTargetView* rendertargetview = nullptr;
 
-    static int resize_width;
-    static int resize_height;
-
     static LRESULT WINAPI wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
     void create_ctx();

@@ -16,14 +16,20 @@ struct State {
         callbacks.emplace_back(std::make_shared<T>());
     }
 
+    std::optional<std::shared_ptr<Callback>> find_callback(DWORD keycode) {
+        for (auto& callback : callbacks) {
+            if (callback->keybind == keycode)
+                return callback;
+        }
+
+        return std::nullopt;
+    }
+
     std::optional<std::shared_ptr<Callback>> find_callback(int src, int dst) {
         for (auto& callback : callbacks) {
-            if (callback->enabled) {
-                if ((callback->direction == DIRECTION::INGRESS && callback->port_start <= src && callback->port_end >= src) ||
-                    (callback->direction == DIRECTION::EGRESS && callback->port_start <= dst && callback->port_end >= dst)) {
-                    return callback;
-                }
-            }
+            if ((callback->direction == DIRECTION::INGRESS && callback->port_start <= src && callback->port_end >= src) ||
+                (callback->direction == DIRECTION::EGRESS && callback->port_start <= dst && callback->port_end >= dst))
+                return callback;
         }
 
         return std::nullopt;

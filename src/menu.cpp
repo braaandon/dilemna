@@ -8,6 +8,8 @@ void Menu::render(State& state) {
 
     float bg[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+    KeyHandler::install_hook();
+
     while (!state.stopper.stop_requested()) {
         MSG msg;
 
@@ -39,6 +41,7 @@ void Menu::render(State& state) {
         for (auto& cb : state.callbacks) {
             ImGui::Checkbox(cb->name.c_str(), &cb->enabled);
             ImGui::SameLine();
+
             ImGui::TextDisabled("[?]");
             if (ImGui::BeginItemTooltip()) {
                 ImGui::PushTextWrapPos(ImGui::GetFontSize() * 20.0f);
@@ -59,6 +62,7 @@ void Menu::render(State& state) {
         swapchain->Present(1, 0);
     }
 
+    KeyHandler::uninstall_hook();
     destroy_ctx();
 }
 

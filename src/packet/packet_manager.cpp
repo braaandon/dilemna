@@ -41,12 +41,12 @@ void PacketManager::listen(State& state) {
         }
 
         bool cancelled = false;
-        std::optional<std::shared_ptr<Callback>> cb{};
+        std::optional<std::shared_ptr<Callback>> cb = std::nullopt;
 
         if (pkt.tcp_header != nullptr) cb = state.find_callback(htons(pkt.tcp_header->SrcPort), htons(pkt.tcp_header->DstPort));
         if (pkt.udp_header != nullptr) cb = state.find_callback(htons(pkt.udp_header->SrcPort), htons(pkt.udp_header->DstPort));
 
-        if (cb.has_value()) cancelled = (*cb)->call(handle, pkt);
+        if (cb) if ((*cb)->enabled) cancelled = (*cb)->call(handle, pkt);
         if (!cancelled) WinDivertSend(handle, pkt.buffer, sizeof(pkt.buffer), nullptr, &pkt.addr);
     }
 

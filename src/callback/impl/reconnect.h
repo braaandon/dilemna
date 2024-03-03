@@ -4,11 +4,6 @@
 
 class Reconnect : public Callback {
 public:
-    struct {
-        WINDIVERT_IPHDR ip;
-        WINDIVERT_TCPHDR tcp;
-    } reset;
-
     Reconnect() : Callback("Reconnect", "Reconnect to the instance", 30000, 30009, DIRECTION::INGRESS) {
         ZeroMemory(&reset, sizeof(reset));
 
@@ -37,4 +32,10 @@ public:
         WinDivertSend(hdl, (PVOID)&reset, sizeof(reset), nullptr, &pkt.addr);
         return true;
     }
+
+private:
+    struct {
+        WINDIVERT_IPHDR ip;
+        WINDIVERT_TCPHDR tcp;
+    } reset;
 };

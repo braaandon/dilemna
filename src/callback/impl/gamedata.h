@@ -4,7 +4,7 @@
 
 class GameData : public Callback {
 public:
-    GameData() : Callback("Game", "Drop incoming game data", 3074, 3074, Direction::INGRESS) {}
+    GameData() : Callback("Game", "Drop incoming game data", 3074, 3074, Direction::Ingress) {}
 
     bool call(HANDLE hdl, Packet& pkt) override {
         return true;

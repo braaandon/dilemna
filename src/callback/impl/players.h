@@ -4,7 +4,7 @@
 
 class Players : public Callback {
 public:
-    Players() : Callback("Players", "Drop incoming data from other players", 27015, 27200, Direction::INGRESS) {}
+    Players() : Callback("Players", "Drop incoming data from other players", 27015, 27200, Direction::Ingress) {}
 
     bool call(HANDLE hdl, Packet& pkt) override {
         return true;

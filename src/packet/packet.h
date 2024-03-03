@@ -2,9 +2,9 @@
 
 #include <windivert.h>
 
-enum DIRECTION {
-    INGRESS,
-    EGRESS
+enum Direction {
+    Ingress,
+    Egress
 };
 
 struct Packet {

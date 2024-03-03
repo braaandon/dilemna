@@ -4,7 +4,7 @@
 
 class Reconnect : public Callback {
 public:
-    Reconnect() : Callback("Reconnect", "Reconnect to the instance", 30000, 30009, DIRECTION::INGRESS) {
+    Reconnect() : Callback("Reconnect", "Reconnect to the instance", 30000, 30009, Direction::INGRESS) {
         ZeroMemory(&reset, sizeof(reset));
 
         reset.ip.Version = 4;

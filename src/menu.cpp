@@ -25,7 +25,6 @@ void Menu::render(State& state) {
         ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
         ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-
         ImGui::Begin("limits", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 
         for (auto& cb : state.callbacks) {
@@ -43,12 +42,10 @@ void Menu::render(State& state) {
 
         ImGui::End();
         ImGui::PopStyleVar();
-
         ImGui::Render();
         devicectx->OMSetRenderTargets(1, &rendertargetview, nullptr);
         devicectx->ClearRenderTargetView(rendertargetview, bg);
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
         swapchain->Present(1, 0);
     }
 

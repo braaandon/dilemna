@@ -12,13 +12,12 @@ int main() {
     Menu menu;
     State state;
     PacketManager manager;
+    KeyHandler::state = &state;
 
     state.add_callback<GameData>();
     state.add_callback<Character>();
     state.add_callback<Players>();
     state.add_callback<Reconnect>();
-
-    KeyHandler::state = &state;
 
     std::jthread renderer(&Menu::render, menu, std::ref(state));
     std::jthread listener(&PacketManager::listen, manager, std::ref(state));

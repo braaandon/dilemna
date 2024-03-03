@@ -10,12 +10,12 @@ public:
     const std::string tooltip;
     const int port_start;
     const int port_end;
-    const DIRECTION direction;
+    const Direction direction;
 
     DWORD keybind = 0x0;
     bool enabled = false;
 
-    Callback(std::string_view name, std::string_view tooltip, int port_start, int port_end, DIRECTION direction) : name(name), tooltip(tooltip), port_start(port_start), port_end(port_end), direction(direction) {}
+    Callback(std::string_view name, std::string_view tooltip, int port_start, int port_end, Direction direction) : name(name), tooltip(tooltip), port_start(port_start), port_end(port_end), direction(direction) {}
 
     virtual bool call(HANDLE hdl, Packet& pkt) = 0;
 };

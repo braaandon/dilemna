@@ -14,8 +14,8 @@ LRESULT CALLBACK KeyHandler::key_hook(int code, WPARAM wparam, LPARAM lparam) {
 void KeyHandler::notify(KBDLLHOOKSTRUCT info) {
     auto cb = state->find_callback(info.vkCode);
 
-    if (cb)
-        cb.value()->enabled = !cb.value()->enabled;
+    if (cb != nullptr)
+        cb->enabled = !cb->enabled;
 }
 
 void KeyHandler::install_hook() {

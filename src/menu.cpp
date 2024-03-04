@@ -28,6 +28,11 @@ void Menu::render(State& state) {
         ImGui::Begin("limits", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 
         for (auto& cb : state.callbacks) {
+            ImGui::PushItemWidth(25.0f);
+            ImGui::InputInt(("##" + cb->name).c_str(), reinterpret_cast<int*>(&cb->keybind), 0, 0, ImGuiInputTextFlags_CharsHexadecimal);
+            ImGui::PopItemWidth();
+            ImGui::SameLine();
+
             ImGui::Checkbox(cb->name.c_str(), &cb->enabled);
             ImGui::SameLine();
 
@@ -85,6 +90,7 @@ void Menu::create_window() {
     wndclass.lpfnWndProc = wnd_proc;
     wndclass.hInstance = GetModuleHandleA(nullptr);
     wndclass.lpszClassName = "dilemna";
+
     RegisterClass(&wndclass);
 
     hwnd = CreateWindow("dilemna", "dilemna", WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, 100, 100, 300, 200, nullptr, nullptr, nullptr, nullptr);

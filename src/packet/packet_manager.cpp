@@ -1,21 +1,18 @@
 #include "packet_manager.h"
 
-bool PacketManager::initialise() {
+PacketManager::PacketManager() {
     handle = WinDivertOpen("(remotePort >= 7500 && remotePort <= 7509) || (remotePort >= 30000 && remotePort <= 30009) || (remotePort >= 27015 && remotePort <= 27200) || (remotePort == 3074)", WINDIVERT_LAYER_NETWORK, 1, 0);
-    return handle != INVALID_HANDLE_VALUE;
+
+    if (handle == INVALID_HANDLE_VALUE)
+        throw std::exception("bad handle");
 }
 
-void PacketManager::shutdown() {
+PacketManager::~PacketManager() {
     WinDivertShutdown(handle, WINDIVERT_SHUTDOWN_BOTH);
     WinDivertClose(handle);
 }
 
 void PacketManager::listen(State& state) {
-    if (!initialise()) {
-        std::cout << "init failed\n";
-        return;
-    }
-
     Packet pkt;
 
     while(!state.stopper.stop_requested()) {
@@ -49,7 +46,5 @@ void PacketManager::listen(State& state) {
         if (cb != nullptr) if (cb->enabled) cancelled = cb->call(handle, pkt);
         if (!cancelled) WinDivertSend(handle, pkt.buffer, sizeof(pkt.buffer), nullptr, &pkt.addr);
     }
-
-    shutdown();
 }
 

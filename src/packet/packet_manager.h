@@ -11,12 +11,12 @@
 
 class PacketManager {
 public:
+    PacketManager();
+    ~PacketManager();
+
     void listen(State& state);
 
 private:
-    bool initialise();
-    void shutdown();
-
     HANDLE handle;
 };
 

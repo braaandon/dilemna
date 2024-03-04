@@ -1,7 +1,7 @@
 #include <thread>
 
-#include "menu.h"
-#include "keyhandler.h"
+#include "ux/menu.h"
+#include "ux/keyhandler.h"
 #include "packet/packet_manager.h"
 #include "callback/impl/players.h"
 #include "callback/impl/gamedata.h"
@@ -13,6 +13,10 @@ int main() {
     State state;
     PacketManager manager;
     KeyHandler::state = &state;
+
+#ifdef NDEBUG
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
+#endif
 
     state.add_callback<GameData>();
     state.add_callback<Character>();

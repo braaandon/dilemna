@@ -4,7 +4,7 @@ void Menu::render(State& state) {
     create_ctx();
     KeyHandler::install_hook();
 
-    float bg[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    constexpr float bg[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     while (!state.stop.stop_requested()) {
         MSG msg;
@@ -13,8 +13,7 @@ void Menu::render(State& state) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
 
-            if (msg.message == WM_QUIT)
-                state.stop.request_stop();
+            if (msg.message == WM_QUIT) state.stop.request_stop();
         }
 
         ImGui_ImplDX11_NewFrame();
@@ -80,7 +79,6 @@ void Menu::destroy_ctx() {
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
-
     cleanup_rendertarget();
     cleanup_device();
     cleanup_window();
@@ -88,12 +86,10 @@ void Menu::destroy_ctx() {
 
 void Menu::create_window() {
     ZeroMemory(&wndclass, sizeof(wndclass));
-
     wndclass.style = CS_CLASSDC;
     wndclass.lpfnWndProc = wnd_proc;
     wndclass.hInstance = GetModuleHandleA(nullptr);
     wndclass.lpszClassName = "dilemna";
-
     RegisterClass(&wndclass);
 
     hwnd = CreateWindow("dilemna", "dilemna", WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, 100, 100, 300, 200, nullptr, nullptr, nullptr, nullptr);
@@ -142,7 +138,6 @@ void Menu::create_rendertarget() {
 
 void Menu::cleanup_device() {
     cleanup_rendertarget();
-
     swapchain->Release();
     devicectx->Release();
     device->Release();
@@ -155,11 +150,7 @@ void Menu::cleanup_rendertarget() {
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 LRESULT WINAPI Menu::wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-    if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
-        return true;
-
-    if (msg == WM_DESTROY)
-        PostQuitMessage(0);
-
+    if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) return true;
+    if (msg == WM_DESTROY) PostQuitMessage(0);
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }

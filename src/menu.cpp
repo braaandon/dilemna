@@ -29,7 +29,7 @@ void Menu::render(State& state) {
 
         for (auto& cb : state.callbacks) {
             ImGui::PushItemWidth(25.0f);
-            ImGui::InputInt(("##" + cb->name).c_str(), reinterpret_cast<int*>(&cb->keybind), 0, 0, ImGuiInputTextFlags_CharsHexadecimal);
+            ImGui::InputInt(("##" + cb->name).c_str(), &cb->keybind, 0, 0, ImGuiInputTextFlags_CharsHexadecimal);
             ImGui::PopItemWidth();
             ImGui::SameLine();
 
@@ -68,6 +68,10 @@ void Menu::create_ctx() {
 
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
+
+    auto* colors = ImGui::GetStyle().Colors;
+    colors[ImGuiCol_WindowBg] = ImColor(22, 22, 22);
+    colors[ImGuiCol_FrameBg] = ImColor(55, 55, 55);
 
     ImGui_ImplWin32_Init(hwnd);
     ImGui_ImplDX11_Init(device, devicectx);

@@ -8,7 +8,7 @@
 #include "callback/callback.h"
 
 struct State {
-    std::stop_source stopper;
+    std::stop_source stop;
     std::vector<std::shared_ptr<Callback>> callbacks;
 
     template<std::derived_from<Callback> T>

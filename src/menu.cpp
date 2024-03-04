@@ -2,12 +2,11 @@
 
 void Menu::render(State& state) {
     create_ctx();
+    KeyHandler::install_hook();
 
     float bg[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    KeyHandler::install_hook();
-
-    while (!state.stopper.stop_requested()) {
+    while (!state.stop.stop_requested()) {
         MSG msg;
 
         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
@@ -15,7 +14,7 @@ void Menu::render(State& state) {
             DispatchMessage(&msg);
 
             if (msg.message == WM_QUIT)
-                state.stopper.request_stop();
+                state.stop.request_stop();
         }
 
         ImGui_ImplDX11_NewFrame();

@@ -15,7 +15,7 @@ PacketManager::~PacketManager() {
 void PacketManager::listen(State& state) {
     Packet pkt;
 
-    while(!state.stopper.stop_requested()) {
+    while(!state.stop.stop_requested()) {
         WinDivertRecv(handle, pkt.buffer, sizeof(pkt.buffer), &pkt.buffer_len, &pkt.addr);
 
         WinDivertHelperParsePacket(pkt.buffer,
@@ -47,4 +47,3 @@ void PacketManager::listen(State& state) {
         if (!cancelled) WinDivertSend(handle, pkt.buffer, sizeof(pkt.buffer), nullptr, &pkt.addr);
     }
 }
-
